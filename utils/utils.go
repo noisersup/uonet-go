@@ -6,5 +6,7 @@ package utils
 import "fmt"
 
 func ErrLog(err error) {
-	fmt.Print(err.Error)
+	fmt.Println("ERROR=======================")
+	fmt.Println(err.Error())
+	fmt.Println("END=========================")
 }
