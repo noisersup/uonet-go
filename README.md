@@ -9,3 +9,4 @@ Unofficial VULCAN  UONET+ API for Go language.
 - [ ] Getting final data
 - [ ] Remember if user is logged in
 - [ ] Api client for user
+- [ ] Add webscraping support
