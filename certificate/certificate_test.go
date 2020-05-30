@@ -2,11 +2,12 @@ package certificate
 
 import (
 	"fmt"
+	"net/url"
 	"testing"
 )
 
 func TestGetCerts(t *testing.T) {
-	certs, err := GetCerts("3S16HNB", "warszawawola", "429895")
+	certs, err := GetCerts("", "", "")
 	if err != nil {
 		t.Errorf(err.Error())
 	}
@@ -16,19 +17,22 @@ func TestGetCerts(t *testing.T) {
 }
 func TestGetRestAddress(t *testing.T) {
 	testToken := "3S1Gds3"
-	expectedUrl := "https://lekcjaplus.vulcan.net.pl"
-
-	url, err := GetRestAddress(testToken)
+	expectedU, err := url.Parse("https://lekcjaplus.vulcan.net.pl")
 	if err != nil {
 		t.Errorf(err.Error())
 	}
 
-	if url == "" {
+	u, err := GetRestAddress(testToken)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	if u == nil {
 		t.Errorf("The url is empty")
 	}
 
-	if url != expectedUrl {
-		fmt.Println(expectedUrl)       //idk why is this executed
-		t.Errorf("The url is: " + url) //TODO: Fix it
+	if u.String() != expectedU.String() {
+		fmt.Println(expectedU)                //idk why is this executed
+		t.Errorf("The url is: " + u.String()) //TODO: Fix it
 	}
 }

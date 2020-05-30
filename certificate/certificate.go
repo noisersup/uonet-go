@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"strings"
 )
 
@@ -45,7 +46,7 @@ func GetCerts(token string, symbol string, pin string) (Certs, error) { //return
 	return certs, nil
 }
 
-func GetRestAddress(token string) (string, error) {
+func GetRestAddress(token string) (*url.URL, error) {
 	errPrefix := "certificate.GetRestAddress error: "
 
 	data := api.TakeRoutingRules()
@@ -56,9 +57,15 @@ func GetRestAddress(token string) (string, error) {
 		rowChars := row[0:2]
 		if rowChars == chars {
 			urls := strings.Split(row, ",")
-			url := urls[1]
-			return url, nil
+			temp := strings.Split(urls[1], "\r")
+
+			u, err := url.Parse(temp[0])
+			if err != nil {
+				return nil, errors.New(errPrefix + err.Error())
+			}
+
+			return u, nil
 		}
 	}
-	return "", errors.New(errPrefix + "No URL found")
+	return nil, errors.New(errPrefix + "No URL found")
 }

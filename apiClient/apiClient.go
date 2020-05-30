@@ -5,12 +5,13 @@ package apiClient
 	It's the lowest layer of this app
 */
 import (
+	cert "../certificate"
 	u "../utils"
 	"bytes"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -33,9 +34,15 @@ func TakeRoutingRules() string {
 func TakeCerts(token string, symbol string, pin string) (string, error) {
 	errPrefix := "apiClient.TakeCerts error: "
 
-	//address := cert.GetRestAddress(token) + "/" + symbol + "/mobile-api/Uczen.v3.UczenStart/Certyfikat" //Doesn't work
-	address := "https://lekcjaplus.vulcan.net.pl/warszawawola/mobile-api/Uczen.v3.UczenStart/Certyfikat" //Hardcoded for now, TODO: repair GetRestAddress()
-	fmt.Println(address)
+	routingAddress, err := cert.GetRestAddress(token)
+	if err != nil {
+		u.ErrLog(err)
+	}
+
+	address, err := url.Parse(routingAddress.String() + "/" + symbol + "/mobile-api/Uczen.v3.UczenStart/Certyfikat") //Doesn't work
+	if err != nil {
+		u.ErrLog(err)
+	}
 
 	timeNow := time.Now().Unix()
 	time1 := strconv.Itoa(int(timeNow))
@@ -47,7 +54,7 @@ func TakeCerts(token string, symbol string, pin string) (string, error) {
 		"TokenKey": "` + token + `",
 		"AppVersion": "18.4.1.388",
 		"DeviceId": "a4f98332-6a5d-4a53-bd40-a6dd559a9fae",
-		"DeviceName": "Galaxy#S7",
+		"DeviceName": "Galaxy#S8",
 		"DeviceNameUser": "",
 			"DeviceDescription": "",
 		"DeviceSystemType": "Android",
@@ -59,7 +66,7 @@ func TakeCerts(token string, symbol string, pin string) (string, error) {
 		"RemoteMobileAppName": "VULCAN-Android-ModulUcznia"
 	}`)
 
-	req, err := http.NewRequest("POST", address, bytes.NewBuffer(jsonstr))
+	req, err := http.NewRequest("POST", address.String(), bytes.NewBuffer(jsonstr))
 	if err != nil {
 		return "", errors.New(errPrefix + err.Error())
 	}
