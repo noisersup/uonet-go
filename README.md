@@ -2,7 +2,7 @@
 Unofficial VULCAN  UONET+ API for Go language. 
 ## To-Do
 - [x] Http-level functions that return json data from external api
-- [ ] [:seedling: in progress] Getting external address from RoutingRules.txt 
+- [x] Getting external address from RoutingRules.txt 
 - [ ] [:seedling: in progress] Unit tests 
 - [ ] [:seedling: in progress] Request signing
 - [ ] Find way to get a FirebaseTokenKey 
